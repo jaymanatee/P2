@@ -2,8 +2,8 @@
 {
     public class City
     {
-        private PoliceStation PoliceStation = new PoliceStation();
         private List<Taxi> Taxis = new List<Taxi>();
+        private PoliceStation PoliceStation = new PoliceStation();
 
         public void AddTaxiLicense(string plate)
         {
