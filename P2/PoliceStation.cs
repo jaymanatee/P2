@@ -24,7 +24,7 @@
 
         public void RegisterCar(string plate)
         {
-            PoliceCar Car = new PoliceCar(plate, this);
+            PoliceCar Car = new PoliceCar(plate, true, this);
             Cars.Add(Car);
         }
     }

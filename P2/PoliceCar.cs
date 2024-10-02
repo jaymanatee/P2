@@ -1,19 +1,22 @@
 ﻿namespace P2
 {
-    class PoliceCar : Vehicle
+    class PoliceCar : VehicleWithPlate
     {
         //constant string as TypeOfVehicle wont change allong PoliceCar instances
         private const string typeOfVehicle = "Police Car";
         private bool isPatrolling;
-        private SpeedRadar speedRadar;
+        private SpeedRadar? speedRadar;
         private PoliceStation Station;
         private string infractor = "";
         private bool chasing = false;
 
-        public PoliceCar(string plate, PoliceStation Station) : base(typeOfVehicle, plate)
+        public PoliceCar(string plate, bool withRadar, PoliceStation Station) : base(typeOfVehicle, plate)
         {
             isPatrolling = false;
-            speedRadar = new SpeedRadar();
+            if (withRadar)
+            {
+                speedRadar = new SpeedRadar();
+            }
             this.Station = Station;
         }
 
@@ -23,21 +26,29 @@
             chasing = true;
         }
 
-        public void UseRadar(Vehicle vehicle)
+        public void UseRadar(VehicleWithPlate vehicle)
         {
-            if (isPatrolling)
+            if (speedRadar is null)
             {
-                bool aboveSped = speedRadar.TriggerRadar(vehicle);
-                if (aboveSped)
-                {
-                    Station.StartAlarm(vehicle.GetPlate());
-                }
-                string meassurement = speedRadar.GetLastReading();
-                Console.WriteLine(WriteMessage($"Triggered radar. Result: {meassurement}"));
+                Console.WriteLine(WriteMessage("has no radar"));
             }
             else
             {
-                Console.WriteLine(WriteMessage($"has no active radar."));
+                if (isPatrolling)
+                {
+                    bool aboveSped = speedRadar.TriggerRadar(vehicle);
+                    if (aboveSped)
+                    {
+                        Station.StartAlarm(vehicle.GetPlate());
+                    }
+                    string meassurement = speedRadar.GetLastReading();
+                    Console.WriteLine(WriteMessage($"Triggered radar. Result: {meassurement}"));
+                }
+                else
+                {
+                    Console.WriteLine(WriteMessage($"has no active radar."));
+                }
+
             }
         }
 
@@ -74,10 +85,17 @@
 
         public void PrintRadarHistory()
         {
-            Console.WriteLine(WriteMessage("Report radar speed history:"));
-            foreach (float speed in speedRadar.SpeedHistory)
+            if (speedRadar is null)
             {
-                Console.WriteLine(speed);
+                Console.WriteLine(WriteMessage("has no radar"));
+            }
+            else
+            {
+                Console.WriteLine(WriteMessage("Report radar speed history:"));
+                foreach (float speed in speedRadar.SpeedHistory)
+                {
+                    Console.WriteLine(speed);
+                }
             }
         }
     }
