@@ -1,6 +1,6 @@
 ﻿namespace P2
 {
-    class VehicleWithPlate : Vehicle
+    public class VehicleWithPlate : Vehicle
     {
         private string plate;
 

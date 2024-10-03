@@ -1,6 +1,6 @@
 ﻿namespace P2
 {
-    class PoliceCar : VehicleWithPlate
+    public class PoliceCar : VehicleWithPlate
     {
         //constant string as TypeOfVehicle wont change allong PoliceCar instances
         private const string typeOfVehicle = "Police Car";
@@ -37,12 +37,13 @@
                 if (isPatrolling)
                 {
                     bool aboveSped = speedRadar.TriggerRadar(vehicle);
-                    if (aboveSped)
-                    {
-                        Station.StartAlarm(vehicle.GetPlate());
-                    }
                     string meassurement = speedRadar.GetLastReading();
                     Console.WriteLine(WriteMessage($"Triggered radar. Result: {meassurement}"));
+                    if (aboveSped)
+                    {
+                        Console.WriteLine(WriteMessage($"Police Sation alerted: vehicle with plate {vehicle.GetPlate()} on the run."));
+                        Station.StartAlarm(vehicle.GetPlate());
+                    }
                 }
                 else
                 {
